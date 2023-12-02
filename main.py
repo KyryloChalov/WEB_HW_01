@@ -36,12 +36,42 @@ from constants import (
 
 from notes import NotesBook, NoteError, Title, Content, Tags, Note
 
+from abc import ABC, abstractmethod
 
 from prompt_toolkit.completion import NestedCompleter
 
 from prompt_toolkit import prompt
 
 from sort_path import sorting
+
+
+class InputOutput(ABC):
+    def __init__(self, text: str) -> None:
+        self.__text = text
+
+    def __str__(self) -> str:
+        return str(self.__text)
+
+    @abstractmethod
+    def kbd_input(self, text: str):
+        pass
+
+    @abstractmethod
+    def output(self, text: str):
+        pass
+
+
+class Console(InputOutput):
+    @classmethod
+    def kbd_input(self, text: str):
+        user_input = input(text)
+        return user_input
+
+    @classmethod
+    def output(self, text):
+        text = str(text)
+        print(text)
+
 
 book = AddressBook()
 notes = NotesBook()
@@ -221,6 +251,7 @@ def name_find(*args):
 
 # =================== Notes begin =========================
 
+
 @user_error
 def add_note(*args):
     if any([not args, len(args) < 2]):
@@ -277,6 +308,7 @@ def search_notes(*args):
     if not args:
         return f"{RED}searching string is required{RESET}\n\t{WHITE}format: 'search_notes <search_string>'{RESET}"
     return notes.search_notes(args[0])
+
 
 # =================== Notes end =========================
 
@@ -497,12 +529,14 @@ def main():
     global notes
     book = book.read_contacts_from_file(FILENAME)
     notes = notes.read_notes_from_file(NOTE_FILENAME)
-    print(say_hello())
+    Console.output(say_hello())
+    # print(say_hello())
     while True:
         user_input = prompt(">>>", completer=completer)
         # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
         func, data = parser(user_input.strip().lower())
-        print(func(*data))
+        Console.output(func(*data))
+        # print(func(*data))
         if func not in [
             say_good_bay,
             show_all,
