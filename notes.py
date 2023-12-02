@@ -3,6 +3,7 @@ from constants import RED, GRAY, CYAN, MAGENTA, YELLOW, RESET, WHITE, LEN_OF_NAM
 import os.path
 import pickle
 from classes import Field
+from input_output import Console
 
 
 class NoteError(Exception):
@@ -133,7 +134,7 @@ class NotesBook(UserDict):
             with open(fn, "rb") as fh:
                 self = pickle.load(fh)
             self.data = dict(sorted(self.items()))
-        print(f"{GRAY}the notes has been successfully restored{RESET}")
+        Console.output(f"{GRAY}the notes has been successfully restored{RESET}")
         return self
 
     def write_notes_to_file(self, fn):
