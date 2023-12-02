@@ -44,7 +44,6 @@ from prompt_toolkit import prompt
 
 from sort_path import sorting
 
-book = {}
 book = AddressBook()
 notes = NotesBook()
 
@@ -399,11 +398,7 @@ def say_hello(*_):
 
 def say_good_bay(*_):
     book.write_contacts_to_file(FILENAME)
-    # Console.output(book.write_contacts_to_file(FILENAME))
-    # print(book.write_contacts_to_file(FILENAME))
     notes.write_notes_to_file(NOTE_FILENAME)
-    # Console.output(notes.write_notes_to_file(NOTE_FILENAME))
-    # print(notes.write_notes_to_file(NOTE_FILENAME))
     exit("Good bye!")
 
 
@@ -464,7 +459,7 @@ COMMANDS = {
     say_hello: ("hello", "hi"),
     show_all: ("show_all", "show", "list"),
     show_notes: ("show_notes", "show_note", "list_notes"),
-    say_good_bay: ("exit", "good_bay", "by", "close", "end"),
+    say_good_bay: ("exit", "good_bay", "bye", "by", "close", "end"),
     contact: ("contact", "help_contact", "help_record"),
     phone: ("phone", "help_phone"),
     note: ("note", "notes", "help_note", "help_notes"),
@@ -502,7 +497,8 @@ def func_completer(CMD):
     return prompt_dict
 
 
-completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
+completer = NestedCompleter.from_nested_dict(func_completer(PROMPT_COMMANDS))
+# completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
 
 
 def main():
@@ -511,13 +507,11 @@ def main():
     book = book.read_contacts_from_file(FILENAME)
     notes = notes.read_notes_from_file(NOTE_FILENAME)
     Console.output(say_hello())
-    # print(say_hello())
     while True:
         user_input = Console.input(f"{BLUE}>{CYAN}>{YELLOW}>{RESET}")
         # user_input = prompt(">>>", completer=completer)
         func, data = parser(user_input.strip().lower())
         Console.output(func(*data))
-        # print(func(*data))
         if func not in [
             say_good_bay,
             show_all,
