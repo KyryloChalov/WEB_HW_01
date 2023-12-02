@@ -1,7 +1,8 @@
 import sys
 import shutil
 from pathlib import Path
-from constants import RED, BLUE, YELLOW, CYAN, GRAY, WHITE, RESET
+from constants import RED, BLUE, YELLOW, CYAN, GRAY, WHITE, RESET 
+from input_output import Console
 
 
 CATEGORIES = {
@@ -94,7 +95,7 @@ def archive_unpack(dir: Path) -> None:  # +++ ?list(CATEGORIES.keys())[0]
                 element_file.is_file()
                 and str(element_file.suffix) in list(CATEGORIES.values())[0]
             ):
-                print(f"Unpacking: {element_file.name} ...")
+                Console.output(f"Unpacking: {element_file.name} ...")
                 shutil.unpack_archive(
                     element_file, path_arc.joinpath(element_file.stem)
                 )
@@ -136,7 +137,7 @@ def sort_folder(path: Path, is_replace) -> None:  # +++
 def list_print_and_write(text: str, is_echo: bool, file_dscr):  # +++
     file_dscr.write(text + "\n")  # to file
     if is_echo:
-        print(text)  # to screen (only main dir)
+        Console.output(text)  # to screen (only main dir)
 
 
 def list_files_write(
@@ -182,7 +183,7 @@ def prepare_folder() -> None:
 
 # def main() -> str:
 def sorting(*args) -> str:
-    # print(f"{args = }")
+    # Console.output(f"{args = }")
     try:
         path = Path(args[0])
     except IndexError:
@@ -209,6 +210,6 @@ def sorting(*args) -> str:
 
 
 if __name__ == "__main__":
-    print(sorting("d:\\000"))
-    # print(sorting("d:\\00"))
-    # print(sorting())
+    Console.output(sorting("d:\\000"))
+    # Console.output(sorting("d:\\00"))
+    # Console.output(sorting())

@@ -44,7 +44,7 @@ from prompt_toolkit import prompt
 
 from sort_path import sorting
 
-
+book = {}
 book = AddressBook()
 notes = NotesBook()
 
