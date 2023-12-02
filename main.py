@@ -34,43 +34,15 @@ from constants import (
     MAGENTA,
 )
 
-from notes import NotesBook, NoteError, Title, Content, Tags, Note
+from input_output import Console
 
-from abc import ABC, abstractmethod
+from notes import NotesBook, NoteError, Title, Content, Tags, Note
 
 from prompt_toolkit.completion import NestedCompleter
 
 from prompt_toolkit import prompt
 
 from sort_path import sorting
-
-
-class InputOutput(ABC):
-    def __init__(self, text: str) -> None:
-        self.__text = text
-
-    def __str__(self) -> str:
-        return str(self.__text)
-
-    @abstractmethod
-    def input(self, text: str):
-        pass
-
-    @abstractmethod
-    def output(self, text: str):
-        pass
-
-
-class Console(InputOutput):
-    @classmethod
-    def input(self, text: str):
-        user_input = input(text)
-        return user_input
-
-    @classmethod
-    def output(self, text):
-        text = str(text)
-        print(text)
 
 
 book = AddressBook()
@@ -426,9 +398,11 @@ def say_hello(*_):
 
 
 def say_good_bay(*_):
-    Console.output(book.write_contacts_to_file(FILENAME))
+    book.write_contacts_to_file(FILENAME)
+    # Console.output(book.write_contacts_to_file(FILENAME))
     # print(book.write_contacts_to_file(FILENAME))
-    Console.output(notes.write_notes_to_file(NOTE_FILENAME))
+    notes.write_notes_to_file(NOTE_FILENAME)
+    # Console.output(notes.write_notes_to_file(NOTE_FILENAME))
     # print(notes.write_notes_to_file(NOTE_FILENAME))
     exit("Good bye!")
 
@@ -539,7 +513,7 @@ def main():
     Console.output(say_hello())
     # print(say_hello())
     while True:
-        user_input = Console.input(f"{BLUE}>{YELLOW}>>{RESET}")
+        user_input = Console.input(f"{BLUE}>{CYAN}>{YELLOW}>{RESET}")
         # user_input = prompt(">>>", completer=completer)
         func, data = parser(user_input.strip().lower())
         Console.output(func(*data))
