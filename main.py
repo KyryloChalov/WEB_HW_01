@@ -53,7 +53,7 @@ class InputOutput(ABC):
         return str(self.__text)
 
     @abstractmethod
-    def kbd_input(self, text: str):
+    def input(self, text: str):
         pass
 
     @abstractmethod
@@ -63,7 +63,7 @@ class InputOutput(ABC):
 
 class Console(InputOutput):
     @classmethod
-    def kbd_input(self, text: str):
+    def input(self, text: str):
         user_input = input(text)
         return user_input
 
@@ -133,7 +133,6 @@ def add_address(*args):
         addr_str = ""
         # join args with " " starting from 1
         addr_str = " ".join(args[1:])
-        print(addr_str)
         return get_record_or_error(args[0], book).add_address((addr_str))
     else:
         return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
@@ -346,28 +345,34 @@ def search(*args):
 @user_error
 def show_all(*args):
     pages = int(args[0]) if args else len(book.data)
-    print(f"  === Address book ===")
+    Console.output(f"  === Address book ===")
+    # print(f"  === Address book ===")
     count = 0
     for _ in book.iterator(pages):
         for item in _:
-            print(item)
+            Console.output(item)
+            # print(item)
             count += 1
         if count < len(book):
-            input(f"  Press Enter for next page: ")
+            Console.input(f"  Press Enter for next page: ")
+            # input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
 
 @user_error
 def show_notes(*args):
     pages = int(args[0]) if args else len(notes.data)
-    print(f"  === Notes ===")
+    Console.output(f"  === Notes ===")
+    # print(f"  === Notes ===")
     count = 0
     for _ in notes.iterator(pages):
         for item in _:
-            print(item)
+            Console.output(item)
+            # print(item)
             count += 1
         if count < len(notes):
-            input(f"  Press Enter for next page: ")
+            Console.input(f"  Press Enter for next page: ")
+            # input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
 
@@ -421,8 +426,10 @@ def say_hello(*_):
 
 
 def say_good_bay(*_):
-    print(book.write_contacts_to_file(FILENAME))
-    print(notes.write_notes_to_file(NOTE_FILENAME))
+    Console.output(book.write_contacts_to_file(FILENAME))
+    # print(book.write_contacts_to_file(FILENAME))
+    Console.output(notes.write_notes_to_file(NOTE_FILENAME))
+    # print(notes.write_notes_to_file(NOTE_FILENAME))
     exit("Good bye!")
 
 
@@ -532,8 +539,8 @@ def main():
     Console.output(say_hello())
     # print(say_hello())
     while True:
-        user_input = prompt(">>>", completer=completer)
-        # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
+        user_input = Console.input(f"{BLUE}>{YELLOW}>>{RESET}")
+        # user_input = prompt(">>>", completer=completer)
         func, data = parser(user_input.strip().lower())
         Console.output(func(*data))
         # print(func(*data))
@@ -544,8 +551,17 @@ def main():
             say_hello,
             help_page,
             search,
+            search_notes,
             name_find,
+            find,
             birthday,
+            add,
+            change,
+            delete,
+            contact,
+            phone,
+            note,
+            sorting,
         ]:
             book.write_contacts_to_file(FILENAME)
             notes.write_notes_to_file(NOTE_FILENAME)
